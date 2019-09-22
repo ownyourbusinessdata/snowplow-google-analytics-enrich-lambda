@@ -126,3 +126,13 @@ You have to change __endpoint__ to created cloudfront domain name and add code o
 All data requested from Google Tag Manager compiles in GET request. Pixel tracker run that request to cloudfront distribution. Request string logs with cloudfront.
 
 Log file puts into __lt-logs__ bucket. Lambda function start to porocess new data, enrich it according [Google Analytics Measurement Protocol](https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters) and put enriched data in Converted folder.
+
+# Infrastructure termination
+
+To delete infrastructure inside repo directory run:
+
+```bash
+terraform destroy
+```
+
+There may be errors while deleting some components because it consists data not created by terraform. You should delete these components manually.
