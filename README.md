@@ -95,3 +95,28 @@ Terraform will create:
 * Athena saved query with name __events__
 
 To complete infrastructure deployment run created saved athena query in created workgroup, it will create table with enriched snowplow events.
+
+# Configuring snowplow Google Analytics plugin:
+
+Snowplow pixel GA plugin optimized for working with cloudfront looks like:
+
+```javascript
+function() {
+  var endpoint = 'https://d28zcvgo2jno01.cloudfront.net/i';
+  return function(model) {    
+    var globalSendTaskName = '_' + model.get('trackingId') + '_sendHitTask';
+    var originalSendHitTask = window[globalSendTaskName] = window[globalSendTaskName] || model.get('sendHitTask');
+    model.set('sendHitTask', function(sendModel) {
+      var payload = sendModel.get('hitPayload');
+      originalSendHitTask(sendModel);
+      var request = new XMLHttpRequest();
+      var path = endpoint + '?' + payload;
+      request.open('GET', path, true);
+      request.setRequestHeader('Content-type', 'text/plain; charset=UTF-8');
+      request.send(payload);
+    });
+  };
+}
+```
+
+You have to change __endpoint__ to created cloudfront domain name and add code on pages you wanted to track with snowplow.
