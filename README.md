@@ -80,7 +80,7 @@ terraform apply
 Terraform will create:
 
 * 3 Buckets:
-  1. With __lt-src__ suffix. Public accessible for reading. Contains 1x1 pixel image for snowplow POST data.
+  1. With __lt-src__ suffix. Public accessible for reading. Contains 1x1 pixel image for snowplow GET data.
   2. With __lt-logs__ suffix. Using for storing: cloudfront logs with __RAW__ prefix, enriched snowplow data with __Converted__ prefix and maxmind GeoLite2 database.
   3. With __lt-ath__ suffix. Using for storing Athena query results.
 
@@ -120,3 +120,9 @@ function() {
 ```
 
 You have to change __endpoint__ to created cloudfront domain name and add code on pages you wanted to track with snowplow.
+
+# How it works
+
+All data requested from Google Tag Manager compiles in GET request. Pixel tracker run that request to cloudfront distribution. Request string logs with cloudfront.
+
+Log file puts into __lt-logs__ bucket. Lambda function start to porocess new data, enrich it according [Google Analytics Measurement Protocol](https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters) and put enriched data in Converted folder.
