@@ -12,7 +12,7 @@ Enriched and processed logs puts in same bucket within Converted folder.
 # Requirenments
 
 * Terraform 0.12
-* AWS user with following recomended permissions:
+* AWS user should have following recomended permissions:
 
 ```json
 {
